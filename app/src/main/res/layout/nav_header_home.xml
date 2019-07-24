@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="160dp"-->
+    <!--android:background="@color/colorPrimaryDark"-->
+    <!--android:gravity="bottom"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingBottom="16dp"-->
+    <!--android:paddingLeft="16dp"-->
+    <!--android:paddingRight="16dp"-->
+    <!--android:paddingTop="16dp"-->
+    <!--android:theme="@style/ThemeOverlay.AppCompat.Dark">-->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="196dp"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:padding="12dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/nav_header_circleimageview_id"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/applogo" />
+
+    <TextView
+        android:id="@+id/nav_header_name_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Contact us"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        android:textSize="24sp"
+        android:textFontWeight="bold"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/nav_header_emailaddress_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="info@porkdelivery.com"
+        android:textColor="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="14sp"
+        android:paddingBottom="4dp"/>
+
+    <View
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#15000000"/>
+
+</LinearLayout>
+<!--</RelativeLayout>-->

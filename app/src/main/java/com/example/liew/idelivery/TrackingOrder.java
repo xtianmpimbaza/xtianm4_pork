@@ -73,10 +73,10 @@ public class TrackingOrder extends FragmentActivity implements OnMapReadyCallbac
     TextView distance,duration,time;
     FButton btn_call;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
 
 
     @Override
@@ -84,10 +84,10 @@ public class TrackingOrder extends FragmentActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
 
         //add calligraphy
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/restaurant_font.otf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/restaurant_font.otf")
+//                .setFontAttrId(R.attr.fontPath)
+//                .build());
 
         setContentView(R.layout.activity_tracking_order);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

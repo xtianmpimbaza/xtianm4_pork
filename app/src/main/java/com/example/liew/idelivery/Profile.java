@@ -56,18 +56,9 @@ public class Profile extends AppCompatActivity {
 
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //add calligraphy
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/restaurant_font.otf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+
         setContentView(R.layout.activity_profile);
 
         db = FirebaseDatabase.getInstance();
@@ -81,7 +72,7 @@ public class Profile extends AppCompatActivity {
         btnUpdateHomeAddress = (FButton)findViewById(R.id.btn_updateAddress);
         btnUpdateUsername = (FButton)findViewById(R.id.btn_updateUsername);
         profile_pic = (CircularImageView) findViewById(R.id.profile_picture);
-        profile_pic.setBorderColor(getResources().getColor(R.color.fbutton_color_green_sea));
+        profile_pic.setBorderColor(getResources().getColor(R.color.fbutton_color_carrot));
         profile_pic.setBorderWidth(2);
 
         btnUpdateUsername.setOnClickListener(new View.OnClickListener() {

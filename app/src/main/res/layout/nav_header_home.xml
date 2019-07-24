@@ -34,7 +34,6 @@
         android:text="Contact us"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
         android:textSize="24sp"
-        android:textFontWeight="bold"
         android:textColor="@android:color/white"/>
 
     <TextView

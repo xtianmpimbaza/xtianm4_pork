@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public TextView txtFullName;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
-    FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
+    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
     SwipeRefreshLayout swipeRefreshLayout;
     CounterFab fab;
@@ -77,20 +77,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences sharedPreferences;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //add calligraphy
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/restaurant_font.otf")
-//                .setFontAttrId(R.attr.fontPath)
-//                .build());
-
 
         setContentView(R.layout.activity_home);
 
@@ -105,7 +93,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         //Init SwipeRefreshLayout view
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
@@ -157,10 +145,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         //get CategoryId and sent to new activity
-                        Intent foodList = new Intent(HomeActivity.this,FoodList.class);
+                        Intent foodList = new Intent(HomeActivity.this, FoodList.class);
 
                         //because CategoryId is a key, so we just get key of this item
-                        foodList.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
                         startActivity(foodList);
                     }
                 });
@@ -177,7 +165,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Paper.init(this);
 
-        fab = (CounterFab)findViewById(R.id.fab);
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,13 +188,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //set name for user at navigation header
 
         View headerView = navigationView.getHeaderView(0);
-        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
+        txtFullName = (TextView) headerView.findViewById(R.id.nav_header_name_id);
         txtFullName.setText(Common.currentUser.getName());
 
         // Load menu
 
-        recycler_menu = (RecyclerView)findViewById(R.id.recycler_menu);
-        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
+        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+        recycler_menu.setLayoutManager(new GridLayoutManager(this, 2));
         LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),
                 R.anim.layout_fall_down);
         recycler_menu.setLayoutAnimation(controller);
@@ -219,7 +207,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupSlider() {
 
-        sliderLayout = (SliderLayout)findViewById(R.id.slider);
+        sliderLayout = (SliderLayout) findViewById(R.id.slider);
         image_list = new HashMap<>();
 
         final DatabaseReference banners = database.getReference("Banner");
@@ -228,14 +216,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
                     Banner banner = postSnapShot.getValue(Banner.class);
-                    image_list.put(banner.getName()+"_" + banner.getId(), banner.getImage());
+                    image_list.put(banner.getName() + "_" + banner.getId(), banner.getImage());
                 }
 
-                for (String key:image_list.keySet())
-                {
+                for (String key : image_list.keySet()) {
                     String[] keySplit = key.split("_");
                     String nameOfFood = keySplit[0];
                     String idOfFood = keySplit[1];
@@ -335,9 +321,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         txtFullName.setText(Common.currentUser.getName());
         fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
-        if(adapter !=null)
+        if (adapter != null)
             adapter.startListening();
-        if (sharedPreferences.getBoolean("firstrun", true)){
+        if (sharedPreferences.getBoolean("firstrun", true)) {
             CompleteProfileNotification();
             sharedPreferences.edit().putBoolean("firstrun", false)
                     .commit();
@@ -363,8 +349,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_search)
-            startActivity(new Intent(HomeActivity.this,SearchActivity.class));
+        if (item.getItemId() == R.id.menu_search)
+            startActivity(new Intent(HomeActivity.this, SearchActivity.class));
 
         return super.onOptionsItemSelected(item);
     }
@@ -381,44 +367,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent cartIntent = new Intent(HomeActivity.this, Cart.class);
             startActivity(cartIntent);
 
-        }else if (id == R.id.nav_orders) {
+        } else if (id == R.id.nav_orders) {
             Intent orderIntent = new Intent(HomeActivity.this, OrderStatus.class);
             startActivity(orderIntent);
 
-        }else if (id == R.id.nav_logout) {
-
-            ConfirmSignOutDialog();
-        }
-
-        else if(id == R.id.nav_profile){
+//        }
+//        else if (id == R.id.nav_logout) {
+//
+//            ConfirmSignOutDialog();
+        } else if (id == R.id.nav_profile) {
 
             Intent profileIntent = new Intent(HomeActivity.this, Profile.class);
             startActivity(profileIntent);
-        }
-
-        else if (id == R.id.nav_settings){
-
-            showSettingDialog();
-        }
-        else if (id == R.id.nav_favorites)
-        {
+//        } else if (id == R.id.nav_settings) {
+//
+//            showSettingDialog();
+        } else if (id == R.id.nav_favorites) {
             startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
-        }
-        else if (id == R.id.nav_about)
-        {
-            Intent aboutIntent = new Intent(HomeActivity.this, ScrollingActivity.class);
+        } else if (id == R.id.nav_about) {
+            Intent aboutIntent = new Intent(HomeActivity.this, AboutActivity.class);
             startActivity(aboutIntent);
-        }
-        else if (id == R.id.nav_contact)
-        {
+        } else if (id == R.id.nav_contact) {
             Intent contactIntent = new Intent(HomeActivity.this, ContactUs.class);
             startActivity(contactIntent);
         }
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     private void ConfirmSignOutDialog() {
 
@@ -463,7 +440,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_setting = inflater.inflate(R.layout.setting_layout, null);
 
-        final CheckBox ckb_sub_new = (CheckBox)layout_setting.findViewById(R.id.ckb_sub_new);
+        final CheckBox ckb_sub_new = (CheckBox) layout_setting.findViewById(R.id.ckb_sub_new);
         //remember checkbox
         Paper.init(this);
         String isSubscribe = Paper.book().read("sub_new");
@@ -480,14 +457,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-                if (ckb_sub_new.isChecked())
-                {
+                if (ckb_sub_new.isChecked()) {
                     FirebaseMessaging.getInstance().subscribeToTopic(Common.topicName);
                     Paper.book().write("sub_new", "true");
                     Toast.makeText(HomeActivity.this, "Subscribe Success!", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(Common.topicName);
                     Paper.book().write("sub_new", "false");
                     Toast.makeText(HomeActivity.this, "Unsubscribe Success!", Toast.LENGTH_SHORT).show();

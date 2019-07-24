@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -37,20 +38,14 @@ public class FavoritesActivity extends AppCompatActivity implements RecyclerItem
     RelativeLayout rootLayout;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //add calligraphy
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/restaurant_font.otf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
-        setContentView(R.layout.activity_favorites);
 
+        setContentView(R.layout.activity_favorites);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        toolbar.setTitle("Favourites");
+        setSupportActionBar(toolbar);
         rootLayout = (RelativeLayout)findViewById(R.id.root_layout);
 
         recyclerView = (RecyclerView)findViewById(R.id.recycler_fav);

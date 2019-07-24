@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,26 +20,18 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class ContactUs extends AppCompatActivity {
 
     ImageView image_call,image_mail,image_facebook;
-    public static String FACEBOOK_URL = "https://www.facebook.com/borenos";
-    public static String FACEBOOK_PAGE_ID = "Borenos";
-
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+    public static String FACEBOOK_URL = "https://www.facebook.com/";
+    public static String FACEBOOK_PAGE_ID = "PorkDelivery";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //add calligraphy
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/restaurant_font.otf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
-
         setContentView(R.layout.activity_contact_us);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        toolbar.setTitle("Contact Us");
+        setSupportActionBar(toolbar);
 
         image_call = (ImageView)findViewById(R.id.image_call);
         image_mail = (ImageView)findViewById(R.id.image_mail);
@@ -48,7 +41,7 @@ public class ContactUs extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:088486623"));
+                intent.setData(Uri.parse("tel:+256700582075"));
                 if (ActivityCompat.checkSelfPermission(ContactUs.this,
                         Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 }
@@ -61,10 +54,10 @@ public class ContactUs extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"syetchau@hotmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"skiguddeivan@gmail.com"});
                 emailIntent.putExtra(Intent.EXTRA_CC, new String[]{""});
 
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pork Delivery Enquiry");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
 
                 emailIntent.setType("message/rfc822");

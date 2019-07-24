@@ -42,21 +42,10 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference users;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //add calligraphy
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/restaurant_font.otf")
-//                .setFontAttrId(R.attr.fontPath)
-//                .build());
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AccountKit.initialize(this);

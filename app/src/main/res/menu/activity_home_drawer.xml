@@ -6,10 +6,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_contacts_black_24dp"
-            android:title="Profile"/>
-        <item
             android:id="@+id/nav_menu"
             android:icon="@drawable/ic_restaurant_menu_black_24dp"
             android:title="Menu" />
@@ -29,10 +25,10 @@
             android:icon="@drawable/ic_access_time_black_24dp"
             android:title="Orders"/>
 
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="News"/>
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:icon="@drawable/ic_settings_black_24dp"-->
+            <!--android:title="News"/>-->
 
         <item
             android:id="@+id/nav_contact"
@@ -43,11 +39,15 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about_black_24dp"
             android:title="About Us"/>
-
         <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Sign Out" />
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_contacts_black_24dp"
+            android:title="Profile"/>
+
+        <!--<item-->
+            <!--android:id="@+id/nav_logout"-->
+            <!--android:icon="@drawable/ic_exit_to_app_black_24dp"-->
+            <!--android:title="Sign Out" />-->
 
 
     </group>

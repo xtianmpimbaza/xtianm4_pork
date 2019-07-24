@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -124,34 +125,25 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     RelativeLayout rootLayout;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //add calligraphy
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-        .setDefaultFontPath("fonts/restaurant_font.otf")
-        .setFontAttrId(R.attr.fontPath)
-        .build());
-
         setContentView(R.layout.activity_cart);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        toolbar.setTitle("Meal Cart");
+        setSupportActionBar(toolbar);
 
         //Runtime permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED))
-        {
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]
                     {
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION
-                    },LOCATION_REQUEST_CODE);
-        }else
-        {
+                    }, LOCATION_REQUEST_CODE);
+        } else {
             if (checkPlayServices()) //if have play service on device
             {
                 buildGoogleApiClient();
@@ -163,7 +155,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         mGoogleMapService = Common.getGoogleMapAPI();
 
         //init rootlayout
-        rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
 
         //Init service
         mService = Common.getFCMService();
@@ -173,17 +165,17 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         requests = database.getReference("Requests");
 
         //Init
-        recyclerView = (RecyclerView)findViewById(R.id.listCart);
+        recyclerView = (RecyclerView) findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         //Swipe to delete
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
-        txtTotalPrice = (TextView)findViewById(R.id.total);
-        btnPlace = (FButton)findViewById(R.id.btnPlaceOrder);
+        txtTotalPrice = (TextView) findViewById(R.id.total);
+        btnPlace = (FButton) findViewById(R.id.btnPlaceOrder);
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,12 +214,10 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     private boolean checkPlayServices() {
 
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS)
-        {
+        if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_REQUEST).show();
-            else
-            {
+            else {
                 Toast.makeText(this, "This device is not supported.", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -236,62 +226,59 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         return true;
     }
 
-    private void showAlertDialog(){
+    private void showAlertDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your address: ");
 
-           LayoutInflater inflater = this.getLayoutInflater();
-           View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
-           final PlaceAutocompleteFragment edtAddress = (PlaceAutocompleteFragment)getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        final PlaceAutocompleteFragment edtAddress = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
-           //Hide search icon before fragment
-           edtAddress.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
+        //Hide search icon before fragment
+        edtAddress.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
 
-           //set hint for Autocomplete EditText
-          ((EditText)edtAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setHint("Enter your address");
+        //set hint for Autocomplete EditText
+        ((EditText) edtAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setHint("Enter your address");
 
-          //set text size
-          ((EditText)edtAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setTextSize(14);
+        //set text size
+        ((EditText) edtAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setTextSize(14);
 
-          //get address from place autocomplete
-           edtAddress.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-               @Override
-               public void onPlaceSelected(Place place) {
-                   shippingAddress = place;
-               }
+        //get address from place autocomplete
+        edtAddress.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                shippingAddress = place;
+            }
 
-               @Override
-               public void onError(Status status) {
-                   Log.e("ERROR",status.getStatusMessage());
-               }
-           });
+            @Override
+            public void onError(Status status) {
+                Log.e("ERROR", status.getStatusMessage());
+            }
+        });
 
-          final MaterialEditText edtComment = (MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+        final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
 
-          //radio button
-        final RadioButton rdyShipToAddress = (RadioButton)order_address_comment.findViewById(R.id.rdyShipToAddress);
-        final RadioButton rdyHomeAddress = (RadioButton)order_address_comment.findViewById(R.id.rdyHomeAddress);
-        final RadioButton cashOnDelivery = (RadioButton)order_address_comment.findViewById(R.id.cashOnDelivery);
+        //radio button
+        final RadioButton rdyShipToAddress = (RadioButton) order_address_comment.findViewById(R.id.rdyShipToAddress);
+        final RadioButton rdyHomeAddress = (RadioButton) order_address_comment.findViewById(R.id.rdyHomeAddress);
+        final RadioButton cashOnDelivery = (RadioButton) order_address_comment.findViewById(R.id.cashOnDelivery);
 
 
         //radio event
         rdyHomeAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
 
                     if (Common.currentUser.getHomeAddress() != null ||
-                            !TextUtils.isEmpty(Common.currentUser.getHomeAddress()))
-                    {
+                            !TextUtils.isEmpty(Common.currentUser.getHomeAddress())) {
                         address = Common.currentUser.getHomeAddress();
-                        ((EditText)edtAddress.getView().findViewById(R.id.place_autocomplete_search_input))
+                        ((EditText) edtAddress.getView().findViewById(R.id.place_autocomplete_search_input))
                                 .setText(address);
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(Cart.this, "Please Update HomeActivity Address!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -302,9 +289,9 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //ship to this address feature
-                if (isChecked){
+                if (isChecked) {
 
-                    mGoogleMapService.getAddressName(String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng="+mLastLocation.getLatitude()+","+mLastLocation.getLongitude()+"&sensor=false&key=AIzaSyBW3rhW1EhjhW36DmMyoTTBup4E6Gu1LCY",
+                    mGoogleMapService.getAddressName(String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + "&sensor=false&key=AIzaSyBW3rhW1EhjhW36DmMyoTTBup4E6Gu1LCY",
                             mLastLocation.getLatitude(),
                             mLastLocation.getLongitude()))
                             .enqueue(new Callback<String>() {
@@ -321,7 +308,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
                                         address = firstObject.getString("formatted_address");
 
                                         //set this address to edtAddress
-                                        ((EditText)edtAddress.getView().findViewById(R.id.place_autocomplete_search_input))
+                                        ((EditText) edtAddress.getView().findViewById(R.id.place_autocomplete_search_input))
                                                 .setText(address);
 
                                     } catch (JSONException e) {
@@ -331,99 +318,96 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
 
                                 @Override
                                 public void onFailure(Call<String> call, Throwable t) {
-                                    Toast.makeText(Cart.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Cart.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             }
         });
 
-           alertDialog.setView(order_address_comment);
-           alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
-           alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
+        alertDialog.setView(order_address_comment);
+        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-                   //add check condition here
-                   //if user select address from place fragment just use it
-                   //if user select ship to this address, get address from location and use it
-                   //if user select home address, get homeaddress from profile and use it
-                   if(!rdyShipToAddress.isChecked() && !rdyHomeAddress.isChecked()){
-                       if (shippingAddress!=null)
-                          address = shippingAddress.getAddress().toString();
-                       else {
-                           Toast.makeText(Cart.this, "Please enter address or select option address", Toast.LENGTH_SHORT).show();
+                //add check condition here
+                //if user select address from place fragment just use it
+                //if user select ship to this address, get address from location and use it
+                //if user select home address, get homeaddress from profile and use it
+                if (!rdyShipToAddress.isChecked() && !rdyHomeAddress.isChecked()) {
+                    if (shippingAddress != null)
+                        address = shippingAddress.getAddress().toString();
+                    else {
+                        Toast.makeText(Cart.this, "Please enter address or select option address", Toast.LENGTH_SHORT).show();
 
-                           //Fix crash fragment
-                           getFragmentManager().beginTransaction()
-                                   .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
-                                   .commit();
+                        //Fix crash fragment
+                        getFragmentManager().beginTransaction()
+                                .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
+                                .commit();
 
-                           return;
-                       }
-                   }
+                        return;
+                    }
+                }
 
-                   if (TextUtils.isEmpty(address)){
-                       Toast.makeText(Cart.this, "Please enter address or select option address", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(address)) {
+                    Toast.makeText(Cart.this, "Please enter address or select option address", Toast.LENGTH_SHORT).show();
 
-                       //Fix crash fragment
-                       getFragmentManager().beginTransaction()
-                               .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
-                               .commit();
+                    //Fix crash fragment
+                    getFragmentManager().beginTransaction()
+                            .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
+                            .commit();
 
-                       return;
-                   }
+                    return;
+                }
 
-                   //check payment
-                   if (!cashOnDelivery.isChecked())
-                   {
-                       Toast.makeText(Cart.this, "Please select Payment option", Toast.LENGTH_SHORT).show();
+                //check payment
+                if (!cashOnDelivery.isChecked()) {
+                    Toast.makeText(Cart.this, "Please select Payment option", Toast.LENGTH_SHORT).show();
 
-                       //Fix crash fragment
-                       getFragmentManager().beginTransaction()
-                               .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
-                               .commit();
+                    //Fix crash fragment
+                    getFragmentManager().beginTransaction()
+                            .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
+                            .commit();
 
-                       return;
-                   }
-                   else if (cashOnDelivery.isChecked())
-                   {
-                       //create new request
-                       Request request = new Request(
-                               Common.currentUser.getPhone(),
-                               Common.currentUser.getName(),
-                               address,
-                               txtTotalPrice.getText().toString(),
-                               "0",
-                               edtComment.getText().toString(),
-                               "Cash On Delivery",
-                               String.format("%s,%s",mLastLocation.getLatitude(), mLastLocation.getLongitude()),
-                               cart
-                       );
+                    return;
+                } else if (cashOnDelivery.isChecked()) {
+                    //create new request
+                    Request request = new Request(
+                            Common.currentUser.getPhone(),
+                            Common.currentUser.getName(),
+                            address,
+                            txtTotalPrice.getText().toString(),
+                            "0",
+                            edtComment.getText().toString(),
+                            "Cash On Delivery",
+                            String.format("%s,%s", mLastLocation.getLatitude(), mLastLocation.getLongitude()),
+                            cart
+                    );
 
-                       //submit to firebase
-                       String order_number = String.valueOf(System.currentTimeMillis());
-                       requests.child(order_number).setValue(request);
+                    //submit to firebase
+                    String order_number = String.valueOf(System.currentTimeMillis());
+                    requests.child(order_number).setValue(request);
 
-                       //delete cart
-                       new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
+                    //delete cart
+                    new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
-                       sendNotification(order_number);
-                   }
-               }
-           });
+                    sendNotification(order_number);
+                }
+            }
+        });
 
-           alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
-                   dialog.dismiss();
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
 
-                   //remove fragment
-                   getFragmentManager().beginTransaction()
-                           .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
-                           .commit();
-               }
-           });
+                //remove fragment
+                getFragmentManager().beginTransaction()
+                        .remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment))
+                        .commit();
+            }
+        });
 
 
         alertDialog.show();
@@ -434,14 +418,10 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode)
-        {
-            case LOCATION_REQUEST_CODE:
-            {
-                if (grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    if (checkPlayServices())
-                    {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (checkPlayServices()) {
                         buildGoogleApiClient();
                         createLocationRequest();
                     }
@@ -460,7 +440,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         data.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren()){
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
 
                     Token serverToken = postSnapShot.getValue(Token.class);
 
@@ -503,15 +483,15 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     private void loadListFood() {
 
         cart = new Database(this).getCarts(Common.currentUser.getPhone());
-        adapter = new CartAdapter(cart,this);
+        adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         //calculation total price
         float total = 0;
-        for(Order order:cart)
-            total +=(Float.parseFloat(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
-        Locale locale = new Locale("en","MY");
+        for (Order order : cart)
+            total += (Float.parseFloat(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+        Locale locale = new Locale("en", "MY");
         java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
         txtTotalPrice.setText(fmt.format(total));
     }
@@ -532,7 +512,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         new Database(this).cleanCart(Common.currentUser.getPhone());
 
         //final,update new data from List<Order> to SQLite
-        for (Order item:cart)
+        for (Order item : cart)
             new Database(this).addToCart(item);
 
         //refresh
@@ -549,8 +529,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     private void startLocationUpdates() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED))
-        {
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -559,17 +538,13 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     private void displayLocation() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED))
-        {
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null)
-        {
-           Log.d("LOCATION", "Your location : " + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
-        }
-        else
-        {
+        if (mLastLocation != null) {
+            Log.d("LOCATION", "Your location : " + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
+        } else {
             Log.d("LOCATION", "Could not get your location.");
         }
     }
@@ -594,11 +569,10 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof CartViewHolder)
-        {
-            String name = ((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
+        if (viewHolder instanceof CartViewHolder) {
+            String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
 
-            final Order deleteItem = ((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+            final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
 
             final int deleteIndex = viewHolder.getAdapterPosition();
             adapter.removeItem(deleteIndex);
@@ -609,27 +583,27 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
             //calculation total price
             float total = 0;
             List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
-            for(Order item:orders)
-                total +=(Float.parseFloat(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
-            Locale locale = new Locale("en","MY");
+            for (Order item : orders)
+                total += (Float.parseFloat(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+            Locale locale = new Locale("en", "MY");
             java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
             txtTotalPrice.setText(fmt.format(total));
 
             //snackbar
-            Snackbar snackbar = Snackbar.make(rootLayout,name + " removed from cart!", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(rootLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adapter.restoreItem(deleteItem,deleteIndex);
+                    adapter.restoreItem(deleteItem, deleteIndex);
                     new Database(getBaseContext()).addToCart(deleteItem);
 
                     //update txttotal
                     //calculation total price
                     float total = 0;
                     List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
-                    for(Order item:orders)
-                        total +=(Float.parseFloat(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
-                    Locale locale = new Locale("en","MY");
+                    for (Order item : orders)
+                        total += (Float.parseFloat(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                    Locale locale = new Locale("en", "MY");
                     java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
                     txtTotalPrice.setText(fmt.format(total));
                 }

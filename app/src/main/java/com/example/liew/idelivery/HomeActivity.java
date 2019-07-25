@@ -1,5 +1,6 @@
 package com.example.liew.idelivery;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,10 +31,12 @@ import android.widget.Toast;
 
 
 import com.andremion.counterfab.CounterFab;
+import com.bumptech.glide.request.RequestOptions;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.liew.idelivery.Common.Common;
 import com.example.liew.idelivery.Database.Database;
 import com.example.liew.idelivery.Interface.ItemClickListener;
@@ -53,12 +56,15 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ViewPagerEx.OnPageChangeListener {
 
     FirebaseDatabase database;
     DatabaseReference category;
@@ -74,6 +80,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     HashMap<String, String> image_list;
     SliderLayout sliderLayout;
 
+    //    @BindView(R.id.slider)
+//    SliderLayout mDemoSlider;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -82,9 +90,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_home);
 
+        sliderLayout = (SliderLayout)findViewById(R.id.slider);
+//        ButterKnife.bind(this);
         //for first-time login, pop up notification to complete profile.
         sharedPreferences = getSharedPreferences("com.example.liew.idelivery", MODE_PRIVATE);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
@@ -203,67 +212,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //setup slider
         setupSlider();
+//        makeslider();
     }
+void setupSlider(){
 
-    private void setupSlider() {
+    HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
+        file_maps.put("Fast Services",R.drawable.slider1);
+        file_maps.put("Instant delivery",R.drawable.slider2);
+        file_maps.put("Well Prepared",R.drawable.slider3);
+        file_maps.put("Affordable", R.drawable.slider4);
 
-        sliderLayout = (SliderLayout) findViewById(R.id.slider);
-        image_list = new HashMap<>();
+    for(String name : file_maps.keySet()){
+        TextSliderView textSliderView = new TextSliderView(this);
+        // initialize a SliderLayout
+        textSliderView
+                .description(name)
+                .image(file_maps.get(name))
+                .setScaleType(BaseSliderView.ScaleType.Fit);
 
-        final DatabaseReference banners = database.getReference("Banner");
+        //add your extra information
+        textSliderView.bundle(new Bundle());
+        textSliderView.getBundle()
+                .putString("extra",name);
 
-        banners.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
-                    Banner banner = postSnapShot.getValue(Banner.class);
-                    image_list.put(banner.getName() + "_" + banner.getId(), banner.getImage());
-                }
-
-                for (String key : image_list.keySet()) {
-                    String[] keySplit = key.split("_");
-                    String nameOfFood = keySplit[0];
-                    String idOfFood = keySplit[1];
-
-                    //create slider
-                    final TextSliderView textSliderView = new TextSliderView(getBaseContext());
-                    textSliderView.description(nameOfFood)
-                            .image(image_list.get(key))
-                            .setScaleType(BaseSliderView.ScaleType.Fit)
-                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                                @Override
-                                public void onSliderClick(BaseSliderView slider) {
-
-                                    Intent intent = new Intent(HomeActivity.this, FoodDetail.class);
-
-                                    //send food id to foodDetail
-                                    intent.putExtras(textSliderView.getBundle());
-                                    startActivity(intent);
-                                }
-                            });
-                    //add extra bundle
-                    textSliderView.bundle(new Bundle());
-                    textSliderView.getBundle().putString("FoodId", idOfFood);
-
-                    sliderLayout.addSlider(textSliderView);
-
-                    //remove event after finish
-                    banners.removeEventListener(this);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
-        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        sliderLayout.setDuration(5000);
+        sliderLayout.addSlider(textSliderView);
     }
+    sliderLayout.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+    sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+    sliderLayout.setCustomAnimation(new DescriptionAnimation());
+    sliderLayout.setDuration(2000);
+    sliderLayout.addOnPageChangeListener(this);
+}
 
     private void updateToken(String token) {
 
@@ -482,5 +461,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         alertDialog.show();
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }
 

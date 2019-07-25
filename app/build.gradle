@@ -92,5 +92,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    //butter knife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+//    implementation 'com.github.firdausmaulan:GlideSlider:1.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

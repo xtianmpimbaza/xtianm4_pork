@@ -74,7 +74,7 @@ app:cardElevation="4dp">
             android:gravity="center_vertical|start"
             android:textAllCaps="true"
             android:textStyle="italic"
-            android:text="RM 9.90"/>
+            android:text="UGX 9.90"/>
 
 
     </LinearLayout>

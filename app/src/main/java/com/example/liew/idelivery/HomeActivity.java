@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     void goToFresh(View view) {
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
         in.putExtra("name", "Fresh Pork");
-        in.putExtra("image", "R.drawable.slider3");
+        in.putExtra("image", "slider3");
         in.putExtra("price", "35000");
         in.putExtra("description", "Fresh Pork");
         in.putExtra("menuId", "1");
@@ -103,10 +103,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
 
         in.putExtra("name", "Roasted Pork");
-        in.putExtra("image", "R.drawable.slider1");
+        in.putExtra("image", "slider1");
         in.putExtra("price", "40000");
         in.putExtra("description", "Roasted Pork");
-        in.putExtra("menuId", "1");
+        in.putExtra("menuId", "2");
         startActivity(in);
     }
 
@@ -115,10 +115,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
         in.putExtra("name", "Fried Pork");
-        in.putExtra("image", "R.drawable.slider2");
+        in.putExtra("image", "slider2");
         in.putExtra("price", "51000");
         in.putExtra("description", "Fried Pork");
-        in.putExtra("menuId", "2");
+        in.putExtra("menuId", "3");
         startActivity(in);
     }
 
@@ -126,10 +126,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     void goToSaurcages(View view) {
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
         in.putExtra("name", "Sourceges");
-        in.putExtra("image", "R.drawable.sourcages");
+        in.putExtra("image", "sourcages");
         in.putExtra("price", "51000");
         in.putExtra("description", "Roasted Pork");
-        in.putExtra("menuId", "3");
+        in.putExtra("menuId", "4");
         startActivity(in);
     }
 

@@ -50,10 +50,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, final int position) {
 
-        Picasso.with(cart.getBaseContext())
+//        Picasso.with(cart.getBaseContext())
+//                .load(listData.get(position).getImage())
+//                .resize(70,70)
+//                .centerCrop()
+//                .into(holder.cart_image);
+
+        Picasso.with(holder.itemView.getContext())
                 .load(listData.get(position).getImage())
-                .resize(70,70)
-                .centerCrop()
+                .placeholder(R.drawable.background_white)
+                .error(R.drawable.ic_shopping_cart_white_24dp)
                 .into(holder.cart_image);
 
         holder.btn_quantity.setNumber(listData.get(position).getQuantity());

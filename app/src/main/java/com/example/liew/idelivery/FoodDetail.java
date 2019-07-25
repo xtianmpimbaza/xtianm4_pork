@@ -3,11 +3,14 @@ package com.example.liew.idelivery;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,24 +44,16 @@ import info.hoang8f.widget.FButton;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
+public class FoodDetail extends AppCompatActivity {
 
-    TextView food_name, food_price, food_description;
+    TextView food_name, food_price;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    //    FloatingActionButton btnRating;
     FButton btnCart;
     ElegantNumberButton numberButton;
-//    RatingBar ratingBar;
-
     String foodId = "";
 
-    //    FirebaseDatabase database;
-//    DatabaseReference foods;
-//    DatabaseReference ratingDb;
     Food currentFood;
-
-//    FButton btnShowComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,36 +69,11 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         foodId = menuId;
 
         currentFood = new Food(name, image, description, price, menuId);
-        //btnShowComment
-//        btnShowComment = (FButton)findViewById(R.id.btnShowComment);
-//        btnShowComment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(FoodDetail.this, ShowComment.class);
-//                intent.putExtra(Common.INTENT_FOOD_ID, foodId);
-//                startActivity(intent);
-//            }
-//        });
-
-        //Firebase
-
-//        database = FirebaseDatabase.getInstance();
-//        foods = database.getReference("Foods");
-//        ratingDb = database.getReference("Rating");
 
         //Init View
 
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
         btnCart = (FButton) findViewById(R.id.btnCart);
-//        btnRating = (FloatingActionButton)findViewById(R.id.btn_rating);
-//        ratingBar = (RatingBar)findViewById(R.id.ratingBar);
-
-//        btnRating.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showRatingDialog();
-//            }
-//        });
 
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,14 +85,13 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                         numberButton.getNumber(),
                         currentFood.getPrice(),
                         currentFood.getImage()
-
                 ));
 
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
             }
         });
 
-        food_description = (TextView) findViewById(R.id.food_description);
+//        food_description = (TextView) findViewById(R.id.food_description);
         food_name = (TextView) findViewById(R.id.food_name);
         food_price = (TextView) findViewById(R.id.food_price);
         food_image = (ImageView) findViewById(R.id.img_food);
@@ -136,149 +105,23 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         if (getIntent() != null)
             foodId = getIntent().getStringExtra("menuId");
         if (!foodId.isEmpty()) {
-//            if (Common.isConnectedToInternet(getBaseContext()))
-//            {
             getDetailFood(foodId);
-//                getRatingFood(foodId);
-//            }
-//            else
-//            {
-//                Toast.makeText(FoodDetail.this, "Please check your internet connection!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
         }
     }
 
-//    private void getRatingFood(String foodId) {
-//
-//        Query foodRating = ratingDb.orderByChild("foodId").equalTo(foodId);
-//
-//        foodRating.addValueEventListener(new ValueEventListener() {
-//
-//            int count = 0;
-//            int sum = 0;
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                for(DataSnapshot postSnapshot:dataSnapshot.getChildren()){
-//
-//                    Rating item = postSnapshot.getValue(Rating.class);
-//                    sum += Integer.parseInt(item.getRateValue());
-//                    count++;
-//                }
-//
-//             if (count != 0){
-//                 float average = sum/count;
-//                 ratingBar.setRating(average);
-//             }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//    }
-
-//    private void showRatingDialog() {
-//
-//        new AppRatingDialog.Builder()
-//                .setPositiveButtonText("Submit")
-//                .setNegativeButtonText("Cancel")
-//                .setNoteDescriptions(Arrays.asList("Very Bad", "Not Good", "Quite Good", "Very Good", "Excellent"))
-//                .setDefaultRating(1)
-//                .setTitle("Rate this food")
-//                .setDescription("Please select some stars and give your feedback")
-//                .setTitleTextColor(android.R.color.black)
-//                .setDescriptionTextColor(android.R.color.black)
-//                .setHint("Please write your comment here...")
-//                .setHintTextColor(android.R.color.black)
-//                .setCommentTextColor(android.R.color.black)
-//                .setCommentBackgroundColor(R.color.fbutton_color_green_sea)
-//                .setWindowAnimation(R.style.RatingDialogFadeAnim)
-//                .create(FoodDetail.this)
-//                .show();
-//    }
-
     private void getDetailFood(String foodId) {
-//        foods.child(foodId).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                currentFood = dataSnapshot.getValue(Food.class);
-
         //set Image
-        Picasso.with(getBaseContext()).load(currentFood.getImage()).into(food_image);
+//        Picasso.with(getBaseContext()).load(currentFood.getImage()).into(food_image);
 
+        Resources res = getResources();
+        int resourceId = res.getIdentifier(
+                currentFood.getImage(), "drawable", getPackageName());
+        food_image.setImageResource(resourceId);
+
+        Log.e("gen_image", currentFood.getImage());
         collapsingToolbarLayout.setTitle(currentFood.getName());
         food_price.setText(currentFood.getPrice());
         food_name.setText(currentFood.getName());
-        food_description.setText(currentFood.getDescription());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
-    @Override
-    public void onPositiveButtonClicked(int value, String comments) {
-
-        //get rating and upload to firebase
-//        final Rating rating = new Rating(
-//                Common.currentUser.getPhone(),
-//                foodId,
-//                String.valueOf(value),
-//                comments,
-//                currentFood.getImage()
-//                );
-
-        //Fix user can rate multiple time
-//        ratingDb.push()
-//                .setValue(rating)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        Toast.makeText(FoodDetail.this, "Thank you for submit!", Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                });
-
-
-        /*
-        ratingDb.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(Common.currentUser.getPhone()).exists()){
-
-                    //remove old value
-                    ratingDb.child(Common.currentUser.getPhone()).removeValue();
-
-                    //update new value
-                    ratingDb.child(Common.currentUser.getPhone()).setValue(rating);
-                }
-                else
-                {
-                    ratingDb.child(Common.currentUser.getPhone()).setValue(rating);
-
-                }
-                Toast.makeText(FoodDetail.this, "Thank you for submit!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });      */
-    }
-
-    @Override
-    public void onNegativeButtonClicked() {
-
-    }
 }

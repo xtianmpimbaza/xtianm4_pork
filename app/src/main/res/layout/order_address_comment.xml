@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/rdyShipToAddress"
-                    android:text="Ship To This Address"/>
+                    android:text="To This Address"/>
 
                 <RadioButton
                     android:layout_width="match_parent"

@@ -334,7 +334,7 @@ public class FoodList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull final FoodViewHolder viewHolder, final int position, @NonNull final Food model) {
                 viewHolder.food_name.setText(model.getName());
-                viewHolder.food_price.setText(String.format("RM %s", model.getPrice().toString()));
+                viewHolder.food_price.setText(String.format("UGX %s", model.getPrice().toString()));
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
 
                 //Quick cart

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -61,6 +63,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -70,28 +73,73 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     DatabaseReference category;
     public TextView txtFullName;
     RecyclerView recycler_menu;
-    RecyclerView.LayoutManager layoutManager;
-    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    //    RecyclerView.LayoutManager layoutManager;
+//    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
     SwipeRefreshLayout swipeRefreshLayout;
     CounterFab fab;
 
     //slider
-    HashMap<String, String> image_list;
+//    HashMap<String, String> image_list;
     SliderLayout sliderLayout;
 
     //    @BindView(R.id.slider)
 //    SliderLayout mDemoSlider;
     SharedPreferences sharedPreferences;
 
+    @OnClick(R.id.card_view_fresh)
+    void goToFresh(View view) {
+        Intent in = new Intent(HomeActivity.this, FoodDetail.class);
+        in.putExtra("name", "Fresh Pork");
+        in.putExtra("image", "R.drawable.slider3");
+        in.putExtra("price", "35000");
+        in.putExtra("description", "Fresh Pork");
+        in.putExtra("menuId", "1");
+        startActivity(in);
+    }
+
+    @OnClick(R.id.card_view_roasted)
+    void goToRoast(View view) {
+        Intent in = new Intent(HomeActivity.this, FoodDetail.class);
+
+        in.putExtra("name", "Roasted Pork");
+        in.putExtra("image", "R.drawable.slider1");
+        in.putExtra("price", "40000");
+        in.putExtra("description", "Roasted Pork");
+        in.putExtra("menuId", "1");
+        startActivity(in);
+    }
+
+    @OnClick(R.id.card_view_fried)
+    void goToFry(View view) {
+
+        Intent in = new Intent(HomeActivity.this, FoodDetail.class);
+        in.putExtra("name", "Fried Pork");
+        in.putExtra("image", "R.drawable.slider2");
+        in.putExtra("price", "51000");
+        in.putExtra("description", "Fried Pork");
+        in.putExtra("menuId", "2");
+        startActivity(in);
+    }
+
+    @OnClick(R.id.card_view_sausages)
+    void goToSaurcages(View view) {
+        Intent in = new Intent(HomeActivity.this, FoodDetail.class);
+        in.putExtra("name", "Sourceges");
+        in.putExtra("image", "R.drawable.sourcages");
+        in.putExtra("price", "51000");
+        in.putExtra("description", "Roasted Pork");
+        in.putExtra("menuId", "3");
+        startActivity(in);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-
-        sliderLayout = (SliderLayout)findViewById(R.id.slider);
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
+        sliderLayout = (SliderLayout) findViewById(R.id.slider);
         //for first-time login, pop up notification to complete profile.
         sharedPreferences = getSharedPreferences("com.example.liew.idelivery", MODE_PRIVATE);
 
@@ -112,9 +160,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onRefresh() {
                 if (Common.isConnectedToInternet(getBaseContext()))
-                    loadMenu();
+//                    loadMenu();
+                    Toast.makeText(getBaseContext(), "Refreshed!", Toast.LENGTH_SHORT).show();
                 else {
-                    Toast.makeText(getBaseContext(), "Please check your internet connection!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "No internet connection!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -124,55 +173,51 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                if (Common.isConnectedToInternet(getBaseContext()))
-                    loadMenu();
-                else {
-                    Toast.makeText(getBaseContext(), "Please check your internet connection!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (!Common.isConnectedToInternet(getBaseContext()))
+                    Toast.makeText(getBaseContext(), "No internet connection!", Toast.LENGTH_SHORT).show();
             }
         });
 
         //Init Firebase
 
-        database = FirebaseDatabase.getInstance();
-        category = database.getReference("Category");
+//        database = FirebaseDatabase.getInstance();
+//        category = database.getReference("Category");
 
         //put under firebasedatabase.getinstance
-        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
-                .setQuery(category, Category.class)
-                .build();
+//        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
+//                .setQuery(category, Category.class)
+//                .build();
 
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MenuViewHolder viewHolder, int position, @NonNull Category model) {
-                viewHolder.txtMenuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage()).into
-                        (viewHolder.imageView);
-                final Category clickItem = model;
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        //get CategoryId and sent to new activity
-                        Intent foodList = new Intent(HomeActivity.this, FoodList.class);
+//        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+//            @Override
+//            protected void onBindViewHolder(@NonNull MenuViewHolder viewHolder, int position, @NonNull Category model) {
+//                viewHolder.txtMenuName.setText(model.getName());
+//                Picasso.with(getBaseContext()).load(model.getImage()).into
+//                        (viewHolder.imageView);
+//                final Category clickItem = model;
+//                viewHolder.setItemClickListener(new ItemClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position, boolean isLongClick) {
+//                        //get CategoryId and sent to new activity
+//                        Intent foodList = new Intent(HomeActivity.this, FoodList.class);
+//
+//                        //because CategoryId is a key, so we just get key of this item
+//                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
+//                        startActivity(foodList);
+//                    }
+//                });
+//            }
+//
+//            @NonNull
+//            @Override
+//            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//                View itemView = LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.menu_item, parent, false);
+//                return new MenuViewHolder(itemView);
+//            }
+//        };
 
-                        //because CategoryId is a key, so we just get key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-                    }
-                });
-            }
-
-            @NonNull
-            @Override
-            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.menu_item, parent, false);
-                return new MenuViewHolder(itemView);
-            }
-        };
-
-        Paper.init(this);
+//        Paper.init(this);
 
         fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -202,47 +247,48 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         // Load menu
 
-        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-        recycler_menu.setLayoutManager(new GridLayoutManager(this, 2));
-        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),
-                R.anim.layout_fall_down);
-        recycler_menu.setLayoutAnimation(controller);
+//        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+//        recycler_menu.setLayoutManager(new GridLayoutManager(this, 2));
+//        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),
+//                R.anim.layout_fall_down);
+//        recycler_menu.setLayoutAnimation(controller);
 
-        updateToken(FirebaseInstanceId.getInstance().getToken());
+//        updateToken(FirebaseInstanceId.getInstance().getToken());
 
         //setup slider
         setupSlider();
 //        makeslider();
     }
-void setupSlider(){
 
-    HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
-        file_maps.put("Fast Services",R.drawable.slider1);
-        file_maps.put("Instant delivery",R.drawable.slider2);
-        file_maps.put("Well Prepared",R.drawable.slider3);
-        file_maps.put("Affordable", R.drawable.slider4);
+    void setupSlider() {
 
-    for(String name : file_maps.keySet()){
-        TextSliderView textSliderView = new TextSliderView(this);
-        // initialize a SliderLayout
-        textSliderView
-                .description(name)
-                .image(file_maps.get(name))
-                .setScaleType(BaseSliderView.ScaleType.Fit);
+        HashMap<String, Integer> file_maps = new HashMap<String, Integer>();
+        file_maps.put("Fast Services", R.drawable.slider1);
+        file_maps.put("Instant delivery", R.drawable.slider2);
+        file_maps.put("Affordable", R.drawable.slider3);
+        file_maps.put("Well Prepared", R.drawable.slider4);
 
-        //add your extra information
-        textSliderView.bundle(new Bundle());
-        textSliderView.getBundle()
-                .putString("extra",name);
+        for (String name : file_maps.keySet()) {
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(file_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
 
-        sliderLayout.addSlider(textSliderView);
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra", name);
+
+            sliderLayout.addSlider(textSliderView);
+        }
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        sliderLayout.setDuration(4000);
+        sliderLayout.addOnPageChangeListener(this);
     }
-    sliderLayout.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
-    sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-    sliderLayout.setCustomAnimation(new DescriptionAnimation());
-    sliderLayout.setDuration(2000);
-    sliderLayout.addOnPageChangeListener(this);
-}
 
     private void updateToken(String token) {
 
@@ -254,16 +300,16 @@ void setupSlider(){
         tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
-    private void loadMenu() {
-
-        adapter.startListening();
-        recycler_menu.setAdapter(adapter);
-
-        //Animation
-        recycler_menu.getAdapter().notifyDataSetChanged();
-        recycler_menu.scheduleLayoutAnimation();
-
-    }
+//    private void loadMenu() {
+//
+//        adapter.startListening();
+//        recycler_menu.setAdapter(adapter);
+//
+//        //Animation
+//        recycler_menu.getAdapter().notifyDataSetChanged();
+//        recycler_menu.scheduleLayoutAnimation();
+//
+//    }
 
     private void CompleteProfileNotification() {
 
@@ -291,7 +337,7 @@ void setupSlider(){
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+//        adapter.stopListening();
         sliderLayout.stopAutoCycle();
     }
 
@@ -300,13 +346,13 @@ void setupSlider(){
         super.onResume();
         txtFullName.setText(Common.currentUser.getName());
         fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
-        if (adapter != null)
-            adapter.startListening();
-        if (sharedPreferences.getBoolean("firstrun", true)) {
-            CompleteProfileNotification();
-            sharedPreferences.edit().putBoolean("firstrun", false)
-                    .commit();
-        }
+//        if (adapter != null)
+//            adapter.startListening();
+//        if (sharedPreferences.getBoolean("firstrun", true)) {
+//            CompleteProfileNotification();
+//            sharedPreferences.edit().putBoolean("firstrun", false)
+//                    .commit();
+//        }
     }
 
     @Override

@@ -22,7 +22,6 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
         DatabaseReference tokens = db.getReference("Tokens");
         Token token = new Token(tokenRefreshed, false);
         // false because token send from client app
-
         tokens.child(Common.currentUser.getPhone()).setValue(token);
     }
 }

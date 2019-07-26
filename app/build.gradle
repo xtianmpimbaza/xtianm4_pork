@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -98,5 +102,7 @@ dependencies {
 //    implementation 'com.github.firdausmaulan:GlideSlider:1.4.0'
 
     implementation 'com.pkmmte.view:circularimageview:1.1'
+    // pub-sub
+    implementation 'de.greenrobot:eventbus:2.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -57,24 +57,23 @@ app:cardElevation="4dp">
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cart_item_name"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical|start"
             android:textAllCaps="true"
             android:textStyle="bold"
-            android:text="Food 01"/>
+            android:text="Dish title"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cart_item_price"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical|start"
-            android:textAllCaps="true"
             android:textStyle="italic"
-            android:text="UGX 9.90"/>
+            android:text="Ush"/>
 
 
     </LinearLayout>

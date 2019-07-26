@@ -90,9 +90,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @OnClick(R.id.card_view_fresh)
     void goToFresh(View view) {
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
-        in.putExtra("name", "Fresh Pork");
+        in.putExtra("name", "Flesh Pork");
         in.putExtra("image", "slider3");
-        in.putExtra("price", "35000");
+        in.putExtra("price", "11000");
         in.putExtra("description", "Fresh Pork");
         in.putExtra("menuId", "1");
         startActivity(in);
@@ -104,7 +104,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         in.putExtra("name", "Roasted Pork");
         in.putExtra("image", "slider1");
-        in.putExtra("price", "40000");
+        in.putExtra("price", "13000");
         in.putExtra("description", "Roasted Pork");
         in.putExtra("menuId", "2");
         startActivity(in);
@@ -116,7 +116,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
         in.putExtra("name", "Fried Pork");
         in.putExtra("image", "slider2");
-        in.putExtra("price", "51000");
+        in.putExtra("price", "15000");
         in.putExtra("description", "Fried Pork");
         in.putExtra("menuId", "3");
         startActivity(in);
@@ -127,7 +127,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Intent in = new Intent(HomeActivity.this, FoodDetail.class);
         in.putExtra("name", "Sourceges");
         in.putExtra("image", "sourcages");
-        in.putExtra("price", "51000");
+        in.putExtra("price", "19000");
         in.putExtra("description", "Roasted Pork");
         in.putExtra("menuId", "4");
         startActivity(in);
@@ -264,7 +264,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         HashMap<String, Integer> file_maps = new HashMap<String, Integer>();
         file_maps.put("Fast Services", R.drawable.slider1);
-        file_maps.put("Instant delivery", R.drawable.slider2);
+        file_maps.put("Instant delivery", R.drawable.slider5);
         file_maps.put("Affordable", R.drawable.slider3);
         file_maps.put("Well Prepared", R.drawable.slider4);
 
@@ -372,13 +372,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_search)
-            startActivity(new Intent(HomeActivity.this, SearchActivity.class));
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.menu_search){
+////            startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -407,8 +408,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //        } else if (id == R.id.nav_settings) {
 //
 //            showSettingDialog();
-        } else if (id == R.id.nav_favorites) {
-            startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
+//        } else if (id == R.id.nav_favorites) {
+//            startActivity(new Intent(HomeActivity.this, FavoritesActivity.class));
         } else if (id == R.id.nav_about) {
             Intent aboutIntent = new Intent(HomeActivity.this, AboutActivity.class);
             startActivity(aboutIntent);

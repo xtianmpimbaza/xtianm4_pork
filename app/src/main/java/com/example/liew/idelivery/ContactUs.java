@@ -7,19 +7,23 @@ import android.content.pm.PackageManager;
 import android.media.Image;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ContactUs extends AppCompatActivity {
 
-    ImageView image_call,image_mail,image_facebook;
+    ImageView image_call, image_mail, image_facebook;
     public static String FACEBOOK_URL = "https://www.facebook.com/";
     public static String FACEBOOK_PAGE_ID = "PorkDelivery";
 
@@ -32,10 +36,11 @@ public class ContactUs extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setTitle("Contact Us");
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        image_call = (ImageView)findViewById(R.id.image_call);
-        image_mail = (ImageView)findViewById(R.id.image_mail);
-        image_facebook = (ImageView)findViewById(R.id.image_facebook);
+        image_call = (ImageView) findViewById(R.id.image_call);
+        image_mail = (ImageView) findViewById(R.id.image_mail);
+        image_facebook = (ImageView) findViewById(R.id.image_facebook);
 
         image_call.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +66,7 @@ public class ContactUs extends AppCompatActivity {
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
 
                 emailIntent.setType("message/rfc822");
-                startActivity(Intent.createChooser(emailIntent,"Choose email..."));
+                startActivity(Intent.createChooser(emailIntent, "Choose email..."));
             }
         });
 
@@ -87,6 +92,31 @@ public class ContactUs extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {
             return FACEBOOK_URL; //normal web url
+        }
+    }
+
+    //    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            // Respond to the action bar's Up/Home button
+//            case android.R.id.home:
+//                NavUtils.navigateUpFromSameTask(this);
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (getParentActivityIntent() == null) {
+                    onBackPressed();
+                } else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -27,6 +29,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -55,7 +59,7 @@ public class OrderStatus extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setTitle("Recent Orders");
         setSupportActionBar(toolbar);
-
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         //Firebase
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
@@ -210,7 +214,6 @@ public class OrderStatus extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -221,5 +224,19 @@ public class OrderStatus extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (getParentActivityIntent() == null) {
+                    onBackPressed();
+                } else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

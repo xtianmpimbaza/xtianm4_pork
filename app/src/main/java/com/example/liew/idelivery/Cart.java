@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,6 +79,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 
 import info.hoang8f.widget.FButton;
@@ -134,6 +136,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setTitle("Meal Cart");
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         //Runtime permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -229,7 +232,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
     private void showAlertDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this, R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        alertDialog.setTitle("One more step!");
+        alertDialog.setTitle("Delivery Point!");
         alertDialog.setMessage("Enter your address: ");
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -491,7 +494,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
         float total = 0;
         for (Order order : cart)
             total += (Float.parseFloat(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
-        Locale locale = new Locale("en", "MY");
+        Locale locale = new Locale("en", "UG");
         java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
         txtTotalPrice.setText(fmt.format(total));
     }
@@ -585,7 +588,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
             List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
             for (Order item : orders)
                 total += (Float.parseFloat(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
-            Locale locale = new Locale("en", "MY");
+            Locale locale = new Locale("en", "UG");
             java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
             txtTotalPrice.setText(fmt.format(total));
 
@@ -603,7 +606,7 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
                     List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
                     for (Order item : orders)
                         total += (Float.parseFloat(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
-                    Locale locale = new Locale("en", "MY");
+                    Locale locale = new Locale("en", "UG");
                     java.text.NumberFormat fmt = java.text.NumberFormat.getCurrencyInstance(locale);
                     txtTotalPrice.setText(fmt.format(total));
                 }
@@ -612,5 +615,19 @@ public class Cart extends AppCompatActivity implements GoogleApiClient.Connectio
             snackbar.show();
         }
     }
-}
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (getParentActivityIntent() == null) {
+                    onBackPressed();
+                } else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}

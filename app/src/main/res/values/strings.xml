@@ -25,4 +25,13 @@
 
     </string>
     <string name="title_activity_tracking_order">Map</string>
+
+    <string name="enable_location_prompt">Please enable location services</string>
+    <string name="enable">Enable</string>
+    <string name="fetching_location">Fetching location...</string>
+    <string name="location_error">Error getting location...</string>
+    <string name="location_permission_rationale">The device location is needed to show markets nearby</string>
+
+    <string name="title_activity_food_detail">Food</string>
+
 </resources>

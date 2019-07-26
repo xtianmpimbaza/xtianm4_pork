@@ -8,9 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,13 +42,14 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Objects;
 
 import info.hoang8f.widget.FButton;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FoodDetail extends AppCompatActivity {
-
+    private Toolbar toolbar;
     TextView food_name, food_price;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
@@ -58,8 +62,13 @@ public class FoodDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_food_detail);
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Food detail");
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         Intent in = getIntent();
         String name = in.getStringExtra("name");
         String image = in.getStringExtra("image");
@@ -67,6 +76,7 @@ public class FoodDetail extends AppCompatActivity {
         String price = in.getStringExtra("price");
         String menuId = in.getStringExtra("menuId");
         foodId = menuId;
+
 
         currentFood = new Food(name, image, description, price, menuId);
 
@@ -88,10 +98,12 @@ public class FoodDetail extends AppCompatActivity {
                 ));
 
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
+                Intent cartIntent = new Intent(FoodDetail.this, Cart.class);
+                startActivity(cartIntent);
             }
         });
 
-//        food_description = (TextView) findViewById(R.id.food_description);
+//      food_description = (TextView) findViewById(R.id.food_description);
         food_name = (TextView) findViewById(R.id.food_name);
         food_price = (TextView) findViewById(R.id.food_price);
         food_image = (ImageView) findViewById(R.id.img_food);
@@ -124,4 +136,33 @@ public class FoodDetail extends AppCompatActivity {
         food_name.setText(currentFood.getName());
     }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            // Respond to the action bar's Up/Home button
+//            case android.R.id.home:
+//                NavUtils.navigateUpFromSameTask(this);
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    //    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (getParentActivityIntent() == null) {
+                    onBackPressed();
+                } else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
